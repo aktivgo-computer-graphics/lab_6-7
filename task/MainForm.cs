@@ -31,9 +31,39 @@ namespace task
         
         private void button1_Click(object sender, EventArgs e)
         {
-            PaintPistonModel();
-            PaintPiston();
+            //PaintPistonModel();
+            //PaintPiston();
             //PaintMolecules();
+            PaintSnowfall();
+        }
+
+        private void PaintSnowfall()
+        {
+            Graph.DrawRectangle(MyPen, 1, 1, 100, 100);
+            Graph.FillRectangle(MyBrush, 1, 1, 100, 100);
+            
+            var bounds = Screen.GetBounds(new Point(0, 0));
+            var bmp = new Bitmap(bounds.Width, bounds.Height);
+            using (var g = Graphics.FromImage(bmp))
+                g.CopyFromScreen(2, 30, 0, 0, bmp.Size);
+            
+            var image = new Bitmap(bmp);
+            var pixelColor = image.GetPixel(0, 0);
+
+            MyPen.Color = pixelColor;
+            MyBrush.Color = pixelColor;
+            Graph.DrawRectangle(MyPen, 150, 150, 100, 100);
+            Graph.FillRectangle(MyBrush, 150, 150, 100, 100);
+        }
+        
+        Color GetPixelColor(Point point) {
+            Color color;
+            using (Bitmap bmp = new Bitmap(Width, Height)) {
+                DrawToBitmap(bmp, new Rectangle(new Point(), Size));
+                bmp.Save("test.png", System.Drawing.Imaging.ImageFormat.Png);
+                color = bmp.GetPixel(point.X, point.Y);
+            }
+            return color;
         }
 
         private void PaintPistonModel()
